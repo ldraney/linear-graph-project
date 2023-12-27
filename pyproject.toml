@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "linear-graph-project"
+version = "0.1.0"
+description = ""
+authors = ["ldraney <draneylucas@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
