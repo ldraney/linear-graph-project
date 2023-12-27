@@ -1,9 +1,7 @@
-# linear-plot-app/app.py
-
 import dash
 from dash import html
-from linear_plot_app import callbacks  # This will import your callback functions
-from linear_plot_app import layouts  # This will import your app layout
+from app import callbacks  # This will import your callback functions
+from app import layouts  # This will import your app layout
 
 app = dash.Dash(__name__)
 
