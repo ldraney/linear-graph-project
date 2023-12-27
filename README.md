@@ -95,3 +95,6 @@ me: TODO - add dependabot and whatever to our pipeline to ensure security and ro
 - **.venv**: This is the directory where Poetry creates the virtual environment for your project. It's typically located within your project directory (if you've configured Poetry to do so) and is activated automatically when using `poetry run` or `poetry shell`.
 
 Remember, the virtual environment created by Poetry during the `poetry install` step persists and doesn't need to be recreated after restarting your PC. It ensures a consistent, isolated environment for your project's dependencies.
+
+
+## Running the App in Production on AWS

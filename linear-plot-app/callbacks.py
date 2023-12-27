@@ -1,6 +1,6 @@
 from dash.dependencies import Input, Output
-import models  # This will import your linear model function
-from app import app  # Import the Dash app instance
+from . import models  # This will import your linear model function
+from ../app import app  # Import the Dash app instance
 
 @app.callback(
     Output('linear-plot', 'figure'),
