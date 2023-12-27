@@ -6,8 +6,8 @@ This guide assumes that you already have [Pyenv](https://github.com/pyenv/pyenv)
 
 ### pyenv commands
 pyenv install 3.12.1
-pyenv virtualenv 3.12.1 linear-graph-project
-pyenv local linear-graph-project
+pyenv virtualenv 3.12.1 linear-pyenv
+pyenv local linear-pyenv
 
 This project includes a `.python-version` file, which Pyenv uses to automatically activate the correct environment when you enter the project directory:
-with a simple cd into this directory you should now be in the `linear-graph-project` environment.
+with a simple cd into this directory you should now be in the `linear-pyenv` environment.
