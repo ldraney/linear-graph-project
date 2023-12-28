@@ -1,33 +1,35 @@
-# Use a specific version of Python provided by an official image
-FROM debian:bookwork-slim
+# Use the latest slim version of Debian
+FROM debian:bookworm-slim
 
-# Set environment variables to:
-# - Ensure Python outputs all logs to the terminal
-# - Set the location where Poetry will be installed
-# - Ensure poetry is in the shell's PATH
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    POETRY_HOME="/opt/poetry" \
-    PATH="$POETRY_HOME/bin:$PATH"
+# Set environment variables to avoid Python buffering and ensure UTF-8 encoding
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONIOENCODING=UTF-8
 
-# Create and switch to a new user
-RUN adduser -u 1001 -D myuser
-USER myuser
-WORKDIR /home/myuser
+# Install essential packages and the latest Python version
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Poetry in an isolated environment
-RUN python3 -m venv $POETRY_HOME \
-    && $POETRY_HOME/bin/pip install --upgrade pip \
-    && $POETRY_HOME/bin/pip install poetry==1.7.0
+# Install Poetry in a global scope
+RUN pip3 install poetry
+
+# Set the working directory in the container
+WORKDIR /app
 
 # Copy only the files needed for Poetry to install dependencies
-COPY --chown=myuser pyproject.toml poetry.lock ./
+COPY pyproject.toml poetry.lock /app/
 
-# Disable virtualenv creation by Poetry and install dependencies
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev  # Add --no-dev if you don't want dev dependencies
+# Configure Poetry: Disable virtualenv creation and install dependencies
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-dev && \
+    # Remove Poetry after dependencies installation to keep image lightweight
+    pip3 uninstall --yes poetry
 
 # Copy the rest of the application files into the container
-COPY --chown=myuser . .
+COPY . /app
 
 # The command to run the application
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
+
