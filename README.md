@@ -55,7 +55,7 @@ Poetry is a tool for dependency management and packaging in Python. It allows yo
 
  Run the following command to install the dependencies specified in your `pyproject.toml` file:
    ```bash
-   poetry install
+   poetry install --no-prod --no-test
 ```
 
 ### Step 5: Running the Application
@@ -98,3 +98,5 @@ Remember, the virtual environment created by Poetry during the `poetry install` 
 
 
 ## Running the App in Production on AWS
+
+

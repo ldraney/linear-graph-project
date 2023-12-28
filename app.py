@@ -1,15 +1,6 @@
-import dash
-from dash import html
-from app import callbacks  # This will import your callback functions
-from app import layouts  # This will import your app layout
+from create_app import create_app
 
-app = dash.Dash(__name__)
-
-app.layout = layouts.layout  # Set the layout of the app
-
-# Include the server variable for deployment purposes
-# Please see https://dash.plotly.com/deployment
-server = app.server
+app = create_app()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
