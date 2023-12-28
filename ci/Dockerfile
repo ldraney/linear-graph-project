@@ -1,5 +1,5 @@
 # Use a specific version of Python provided by an official image
-FROM python:3.10-alpine
+FROM debian:bookwork-slim
 
 # Set environment variables to:
 # - Ensure Python outputs all logs to the terminal
