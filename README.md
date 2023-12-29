@@ -29,7 +29,7 @@ This is useful for automatically using the local environment when you `cd` into 
 
 Run `pre-commit install` to install pre-commit into your git hooks. pre-commit will now run on every commit. Every time you clone a project using pre-commit running pre-commit install should always be the first thing you do.  Linting is also done via actions each time you remote commit.
 
-Occassionally run `pre-commit autoupdate` to get the latest repos for plugins
+Occassionally run `pre-commit autoupdate` to get the latest repos for plugins, afterwhich you again run `pre-commit install`.
 
 Pyenv allows you to easily switch between multiple versions of Python, and Poetry is a tool for dependency management and packaging in Python.
 
