@@ -29,7 +29,9 @@ This is useful for automatically using the local environment when you `cd` into 
 
 Run `pre-commit install` to install pre-commit into your git hooks. pre-commit will now run on every commit. Every time you clone a project using pre-commit running pre-commit install should always be the first thing you do.  Linting is also done via actions each time you remote commit.
 
-Pyenv allows you to easily switch between multiple versions of Python, and Poetry is a tool for dependency management and packaging in Python.  
+Occassionally run `pre-commit autoupdate` to get the latest repos for plugins
+
+Pyenv allows you to easily switch between multiple versions of Python, and Poetry is a tool for dependency management and packaging in Python.
 
 me: so it should end up being pyenv -> pip install poetry -> poetry install and run
 
@@ -86,7 +88,7 @@ This command should be used each time you want to run your application, ensuring
   poetry update
   ```
 
-me: TODO - add dependabot and whatever to our pipeline to ensure security and robust tests.  This shouldn't take much time and will add value to this repo as a template for future projects. 
+me: TODO - add dependabot and whatever to our pipeline to ensure security and robust tests.  This shouldn't take much time and will add value to this repo as a template for future projects.
 
 ### Understanding Poetry Files
 
@@ -100,5 +102,3 @@ Remember, the virtual environment created by Poetry during the `poetry install` 
 
 
 ## Running the App in Production on AWS
-
-
