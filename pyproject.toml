@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "linear-graph-project"
+name = "lineargraphproject"
 version = "0.1.0"
-description = ""
+description = "showing agents the value of getting any policy in any household."
 authors = ["ldraney <draneylucas@gmail.com>"]
 readme = "README.md"
 
