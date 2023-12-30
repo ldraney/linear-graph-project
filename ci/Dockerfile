@@ -1,35 +1,34 @@
 # Use the latest slim version of Debian
-FROM debian:bookworm-slim
+FROM python:3.12.1-bookworm
 
-# Set environment variables to avoid Python buffering and ensure UTF-8 encoding
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONIOENCODING=UTF-8
-
-# Install essential packages and the latest Python version
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-venv && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Poetry in a global scope
-RUN pip3 install poetry
-
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy only the files needed for Poetry to install dependencies
-COPY pyproject.toml poetry.lock /app/
+# Install Poetry
+RUN pip install poetry
 
-# Configure Poetry: Disable virtualenv creation and install dependencies
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-dev && \
-    # Remove Poetry after dependencies installation to keep image lightweight
-    pip3 uninstall --yes poetry
+# Copy only the files needed for installing dependencies to avoid cache busting
+COPY pyproject.toml poetry.lock* /app/
 
-# Copy the rest of the application files into the container
-COPY . /app
+# Install dependencies in a virtual environment
+RUN poetry config virtualenvs.create true \
+    && poetry config virtualenvs.in-project true \
+    && poetry install --no-dev
 
-# The command to run the application
-CMD ["python3", "app.py"]
+# Copy the rest of the code
+COPY . /app/
 
+# Build the project as a wheel
+#RUN poetry build
+
+## Stage 2: Copy the built wheel and install it in a clean Python environment
+#FROM python:3.9-slim
+#WORKDIR /app
+
+## Copy the wheel from the builder stage
+#COPY --from=builder /app/dist/*.whl /app/
+
+## Install the application
+#RUN pip install *.whl && rm *.whl
+
+## The command to run your application, adjust as needed
+#CMD ["python", "-m", "your_package_name"]
