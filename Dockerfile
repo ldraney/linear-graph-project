@@ -45,14 +45,16 @@ ENV PATH="$PYENV_ROOT/versions/3.11.2/bin:$PATH"
 ENV PIP_ROOT_USER_ACTION=ignore
 
 # Install Poetry
-RUN pip install poetry
+RUN pip install poetry==1.7
 
 ## Copy application to container
-#COPY /app /app
-#WORKDIR /app
+COPY . /app
+WORKDIR /app
 
-## Build the project using Poetry
-#RUN poetry build
+# Build the project using Poetry
+RUN poetry install --without test
+
+ENTRYPOINT ["poetry", "run", "python", "-m", "app/app.py"]
 
 ## Stage 2: Run environment with Distroless Python image
 ## I chose this image because its hosted on gcr.io and is viewable on Github

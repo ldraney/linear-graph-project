@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "lineargraphproject"
+name = "lgp"
 version = "0.1.0"
 description = "showing agents the value of getting any policy in any household."
 authors = ["ldraney <draneylucas@gmail.com>"]
@@ -31,4 +31,3 @@ gunicorn = "^21.2.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-

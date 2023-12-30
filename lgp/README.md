@@ -28,4 +28,3 @@ This directory houses the Dash application designed to illustrate the linear rel
 - **Future Expansion**: Consider adding features like range sliders for X and Y, or more complex models for a detailed analysis.
 
 This tool is intended for educational and motivational use, providing a simple yet powerful visual representation of key sales principles. It's unofficial and not directly affiliated with any specific strategies with any particular company.
-
