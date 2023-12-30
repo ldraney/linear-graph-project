@@ -52,7 +52,8 @@ COPY . /app
 WORKDIR /app
 
 # Build the project using Poetry
-RUN poetry install --without test
+#RUN poetry install --without test
+poetry build
 
 ENTRYPOINT ["poetry", "run", "python", "-m", "app/app.py"]
 
