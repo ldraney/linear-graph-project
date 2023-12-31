@@ -50,9 +50,16 @@ WORKDIR /app
 # Build the project using Poetry
 #RUN poetry build
 
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-dev --no-root
+
 # Install dependencies and build the project using Poetry
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev
+#RUN poetry config virtualenvs.in-project true \
+    #&& poetry install --no-dev
 
 # Stage 2: Run environment with Distroless Python image
 # I chose this image because its hosted on gcr.io and is viewable on Github
@@ -61,10 +68,13 @@ RUN poetry config virtualenvs.create false \
 # python version is 3.11.2 as off 29-dec-23
 FROM gcr.io/distroless/python3-debian12:latest
 
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
+
 # Copy app folder and dependencies to distroless
 COPY --from=builder /app /app
-COPY --from=builder /root/.local /root/.local
-
+# Set the path to the virtual environment's site-packages in the distroless image
+ENV PYTHONPATH=/app/.venv/lib/python3.11/site-packages
 # Set the working directory in the distroless image
 WORKDIR /app
 
