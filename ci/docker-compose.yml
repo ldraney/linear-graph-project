@@ -7,5 +7,9 @@ services:
     container_name: lgp-app
     volumes:
       - .:/linear-graph-project
+      #- venv:/app/.venv
     ports:
       - "8050:8050"  # Adjust if your app uses a different port
+
+#volumes:
+  #venv:  # Defines a Docker-managed volume
