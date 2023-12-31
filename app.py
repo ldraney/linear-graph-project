@@ -1,47 +1,82 @@
-import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output
+# ... (other necessary imports) ...
+from dash import Dash, html, dcc, Input, Output
 import plotly.graph_objs as go
-import numpy as np
 
-# Create a Dash app
-app = dash.Dash(__name__)
+app = Dash(__name__)
 
-# Define the layout of the app
 app.layout = html.Div(
     [
-        html.H1("y = mx + b"),
-        dcc.Input(id="m-value", type="number", value=1, step=0.1),
-        dcc.Input(id="b-value", type="number", value=0, step=0.1),
-        dcc.Graph(id="line-graph"),
+        html.H1("Policy Sales Visualization Tool"),
+        dcc.Markdown(
+            """
+        **Adjust the sliders to see how outreach, conversion efficiency, and existing policies impact policy sales.**
+        - **X (New Households)**: Represents the number of new households agents engage with.
+        - **M (Conversion Efficiency)**: Represents the ratio of new life policies per new household.
+        - **B1 (Previous Customer Households)**: Life policies sold to previous customer households without current life policies.
+        - **B2 (Additional Coverage and Renewals)**: Additional life policies sold to customers who already have at least one life policy.
+    """
+        ),
+        dcc.Slider(
+            id="x-slider",
+            min=0,
+            max=100,
+            value=50,
+            step=1,
+            marks={i: str(i) for i in range(0, 101, 10)},
+        ),
+        dcc.Slider(
+            id="m-slider",
+            min=0,
+            max=1,
+            value=0.5,
+            step=0.01,
+            marks={i / 10: str(i / 10) for i in range(0, 11)},
+        ),
+        dcc.Slider(
+            id="b1-slider",
+            min=0,
+            max=50,
+            value=10,
+            step=1,
+            marks={i: str(i) for i in range(0, 51, 5)},
+        ),
+        dcc.Slider(
+            id="b2-slider",
+            min=0,
+            max=50,
+            value=5,
+            step=1,
+            marks={i: str(i) for i in range(0, 51, 5)},
+        ),
+        dcc.Graph(id="policy-graph"),
+        # ... (additional elements and styling) ...
     ]
 )
 
 
-# Define the callback to update the graph
+# Define callback to update graph
 @app.callback(
-    Output("line-graph", "figure"),
-    [Input("m-value", "value"), Input("b-value", "value")],
+    Output("policy-graph", "figure"),
+    [
+        Input("x-slider", "value"),
+        Input("m-slider", "value"),
+        Input("b1-slider", "value"),
+        Input("b2-slider", "value"),
+    ],
 )
-def update_graph(m, b):
-    # Create an array of x values
-    x_values = np.linspace(-10, 10, 100)
-
-    # Calculate y values based on the linear equation
-    y_values = m * x_values + b
-
-    # Create a plotly graph object
-    figure = {
-        "data": [go.Scatter(x=x_values, y=y_values, mode="lines")],
-        "layout": go.Layout(
-            title="Linear Graph of y=mx+b",
-            xaxis={"title": "x"},
-            yaxis={"title": "y"},
-        ),
-    }
+def update_graph(x_value, m_value, b1_value, b2_value):
+    total_b = b1_value + b2_value  # Calculate total B as the sum of B1 and B2
+    y_values = [m_value * x + total_b for x in range(x_value + 1)]
+    figure = go.Figure(
+        data=go.Scatter(x=list(range(x_value + 1)), y=y_values, mode="lines+markers")
+    )
+    figure.update_layout(
+        title="Impact of Outreach, Efficiency, and Existing Policies on Policy Sales",
+        xaxis_title="New Households (X)",
+        yaxis_title="Life Policies Sold (Y)",
+    )
     return figure
 
 
-# Run the app
 if __name__ == "__main__":
-    app.run_server(debug=True, host="0.0.0.0")
+    app.run_server(debug=True)
