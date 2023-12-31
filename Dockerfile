@@ -52,23 +52,40 @@ COPY . /app
 WORKDIR /app
 
 # Build the project using Poetry
-#RUN poetry install --without test
-poetry build
+#RUN poetry build
 
-ENTRYPOINT ["poetry", "run", "python", "-m", "app/app.py"]
+# Install dependencies and build the project using Poetry
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-dev
 
-## Stage 2: Run environment with Distroless Python image
-## I chose this image because its hosted on gcr.io and is viewable on Github
-## Its the only distroless on gcr.io with python pre-installed
-## The python version it uses can be found at https://github.com/GoogleContainerTools/distroless/blob/main/python3/testdata/debian12.yaml
-## python version is 3.11.2 as off 29-dec-23
-#FROM gcr.io/distroless/python3-debian12:latest
+#RUN poetry build
 
-## Copy only the built packages from the builder stage
-#COPY --from=builder /app/dist /app
+#RUN ls -al /app/dist/
 
-## Set the working directory
-#WORKDIR /app
+# Stage 2: Run environment with Distroless Python image
+# I chose this image because its hosted on gcr.io and is viewable on Github
+# Its the only distroless on gcr.io with python pre-installed
+# The python version it uses can be found at https://github.com/GoogleContainerTools/distroless/blob/main/python3/testdata/debian12.yaml
+# python version is 3.11.2 as off 29-dec-23
+FROM gcr.io/distroless/python3-debian12:latest
 
-## Default command to run the Flask app, to be overridden by Kubernetes' gunicorn command
-#CMD ["python3", "app.py"]
+# Copy only the built packages from the builder stage
+#COPY --from=builder /app/dist/*.whl /app/
+COPY --from=builder /app /app
+COPY --from=builder /root/.local /root/.local
+
+# Set the working directory in the distroless image
+WORKDIR /app
+
+# Install the package using pip
+# Note: Distroless images do not have a shell, pip or other tools,
+# so we use an external tool to install the package.
+#COPY --from=builder /root/.pyenv/versions/3.11.2/bin/pip /usr/local/bin/pip
+#COPY --from=builder /root/.pyenv/versions/3.11.2/ /usr/local/lib/python3.11/
+
+#RUN python --version && pip --version
+
+#RUN ["/usr/local/bin/pip", "install", "/app/*.whl"]
+
+# Default command to run the app
+CMD ["lgp/app.py"]

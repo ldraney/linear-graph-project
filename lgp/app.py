@@ -1,6 +1,17 @@
-from create_app import create_app
+# /path/to/app.py
 
-app = create_app()
+
+def main():
+    print("Hello World from my Docker container!")
+
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    main()
+
+
+# from create_app import create_app
+
+# app = create_app()
+
+# if __name__ == "__main__":
+# app.run_server(debug=True)
