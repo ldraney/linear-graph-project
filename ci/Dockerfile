@@ -55,7 +55,7 @@ ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_CREATE=1 \
     POETRY_CACHE_DIR=/tmp/poetry_cache
 
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-dev --no-root
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-root --without test
 
 # Install dependencies and build the project using Poetry
 #RUN poetry config virtualenvs.in-project true \
@@ -75,6 +75,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 COPY --from=builder /app /app
 # Set the path to the virtual environment's site-packages in the distroless image
 ENV PYTHONPATH=/app/.venv/lib/python3.11/site-packages
+
 # Set the working directory in the distroless image
 WORKDIR /app
 
