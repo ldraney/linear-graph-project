@@ -1,34 +1,72 @@
-# Use the latest slim version of Debian
-FROM python:3.12.1-bookworm
+FROM ubuntu:latest as builder
 
-WORKDIR /app
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies required for Pyenv
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    make \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget \
+    curl \
+    llvm \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev \
+	ca-certificates \
+	git
+
+# Install Pyenv
+RUN curl https://pyenv.run | bash
+
+## Set environment variables for Pyenv
+ENV HOME=/root
+ENV PYENV_ROOT=$HOME/.pyenv
+ENV PATH="$PYENV_ROOT/bin:$PATH"
+
+RUN pyenv install 3.11.2
+
+# for the location of pip
+ENV PATH="$PYENV_ROOT/versions/3.11.2/bin:$PATH"
+# to get rid of annoying error for using pip as root
+# see https://stackoverflow.com/questions/68673221/warning-running-pip-as-the-root-user
+ENV PIP_ROOT_USER_ACTION=ignore
 
 # Install Poetry
-RUN pip install poetry
+RUN pip install poetry==1.7
 
-# Copy only the files needed for installing dependencies to avoid cache busting
-COPY pyproject.toml poetry.lock* /app/
+## Copy application to container
+COPY . /app
+WORKDIR /app
 
-# Install dependencies in a virtual environment
-RUN poetry config virtualenvs.create true \
-    && poetry config virtualenvs.in-project true \
-    && poetry install --no-dev
-
-# Copy the rest of the code
-COPY . /app/
-
-# Build the project as a wheel
+# Build the project using Poetry
 #RUN poetry build
 
-## Stage 2: Copy the built wheel and install it in a clean Python environment
-#FROM python:3.9-slim
-#WORKDIR /app
+# Install dependencies and build the project using Poetry
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-dev
 
-## Copy the wheel from the builder stage
-#COPY --from=builder /app/dist/*.whl /app/
+# Stage 2: Run environment with Distroless Python image
+# I chose this image because its hosted on gcr.io and is viewable on Github
+# Its the only distroless on gcr.io with python pre-installed
+# The python version it uses can be found at https://github.com/GoogleContainerTools/distroless/blob/main/python3/testdata/debian12.yaml
+# python version is 3.11.2 as off 29-dec-23
+FROM gcr.io/distroless/python3-debian12:latest
 
-## Install the application
-#RUN pip install *.whl && rm *.whl
+# Copy app folder and dependencies to distroless
+COPY --from=builder /app /app
+COPY --from=builder /root/.local /root/.local
 
-## The command to run your application, adjust as needed
-#CMD ["python", "-m", "your_package_name"]
+# Set the working directory in the distroless image
+WORKDIR /app
+
+# Default command to run the app
+CMD ["app.py"]

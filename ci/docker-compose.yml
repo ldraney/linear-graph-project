@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: ci/Dockerfile
+    container_name: lgp-app
+    volumes:
+      - .:/linear-graph-project
+    ports:
+      - "8000:8000"  # Adjust if your app uses a different port
