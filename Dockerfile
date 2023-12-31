@@ -1,9 +1,5 @@
-# /path/to/Dockerfile
-
-# Stage 1: Build environment with Ubuntu and Python
 FROM ubuntu:latest as builder
 
-# Set a non-interactive frontend during the build to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies required for Pyenv
@@ -58,10 +54,6 @@ WORKDIR /app
 RUN poetry config virtualenvs.create false \
     && poetry install --no-dev
 
-#RUN poetry build
-
-#RUN ls -al /app/dist/
-
 # Stage 2: Run environment with Distroless Python image
 # I chose this image because its hosted on gcr.io and is viewable on Github
 # Its the only distroless on gcr.io with python pre-installed
@@ -69,23 +61,12 @@ RUN poetry config virtualenvs.create false \
 # python version is 3.11.2 as off 29-dec-23
 FROM gcr.io/distroless/python3-debian12:latest
 
-# Copy only the built packages from the builder stage
-#COPY --from=builder /app/dist/*.whl /app/
+# Copy app folder and dependencies to distroless
 COPY --from=builder /app /app
 COPY --from=builder /root/.local /root/.local
 
 # Set the working directory in the distroless image
 WORKDIR /app
 
-# Install the package using pip
-# Note: Distroless images do not have a shell, pip or other tools,
-# so we use an external tool to install the package.
-#COPY --from=builder /root/.pyenv/versions/3.11.2/bin/pip /usr/local/bin/pip
-#COPY --from=builder /root/.pyenv/versions/3.11.2/ /usr/local/lib/python3.11/
-
-#RUN python --version && pip --version
-
-#RUN ["/usr/local/bin/pip", "install", "/app/*.whl"]
-
 # Default command to run the app
-CMD ["lgp/app.py"]
+CMD ["app.py"]
