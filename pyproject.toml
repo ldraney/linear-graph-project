@@ -11,6 +11,8 @@ dash = "^2.14.2"
 plotly = "^5.18.0"
 numpy = "^1.26.2"
 pre-commit = "^3.6.0"
+dash-core-components = "^2.0.0"
+dash-html-components = "^2.0.0"
 
 [tool.poetry.group.test]
 optional = true
