@@ -1,3 +1,11 @@
+production command:
+```
+poetry run gunicorn "app:server"
+```
+
+
+
+
 # linear-graph-project
 making a y=mx+b software for a life insurance company presentation
 
