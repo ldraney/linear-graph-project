@@ -29,13 +29,18 @@ app.layout = html.Div(
                 ),
             ]
         ),
-        dcc.Slider(
-            id="m-slider",
-            min=0,
-            max=1,
-            value=0.5,
-            step=0.01,
-            marks={i / 10: str(i / 10) for i in range(0, 11)},
+        html.Div(
+            [
+                html.P("Conversion Efficiency (M):"),
+                dcc.Slider(
+                    id="m-slider",
+                    min=0,
+                    max=1,
+                    value=0.5,
+                    step=0.01,
+                    marks={i / 10: str(i / 10) for i in range(0, 11)},
+                ),
+            ]
         ),
         html.Div(
             [
@@ -65,7 +70,8 @@ app.layout = html.Div(
         ),
         dcc.Graph(id="policy-graph"),
         # ... (additional elements and styling) ...
-    ]
+    ],
+    style={"backgroundColor": "#F9F9F9", "padding": "10px", "fontSize": "18px"},
 )
 
 
@@ -83,7 +89,12 @@ def update_graph(x_value, m_value, b1_value, b2_value):
     total_b = b1_value + b2_value  # Calculate total B as the sum of B1 and B2
     y_values = [m_value * x + total_b for x in range(x_value + 1)]
     figure = go.Figure(
-        data=go.Scatter(x=list(range(x_value + 1)), y=y_values, mode="lines+markers")
+        data=go.Scatter(
+            x=list(range(x_value + 1)),
+            y=y_values,
+            mode="lines",
+            line=dict(width=10, color="blue"),
+        )
     )
     figure.update_layout(
         title="Impact of Outreach, Efficiency, and Existing Policies on Policy Sales",
