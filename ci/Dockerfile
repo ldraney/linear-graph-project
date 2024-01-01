@@ -73,6 +73,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 # Copy app folder and dependencies to distroless
 COPY --from=builder /app /app
+
 # Set the path to the virtual environment's site-packages in the distroless image
 ENV PYTHONPATH=/app/.venv/lib/python3.11/site-packages
 
@@ -80,4 +81,5 @@ ENV PYTHONPATH=/app/.venv/lib/python3.11/site-packages
 WORKDIR /app
 
 # Default command to run the app
+#CMD ["gunicorn","app:server"]
 CMD ["app.py"]
