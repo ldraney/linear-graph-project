@@ -9,6 +9,3 @@ services:
       - .:/linear-graph-project
     ports:
       - "8050:8050"  # Adjust if your app uses a different port
-
-#volumes:
-  #venv:  # Defines a Docker-managed volume
