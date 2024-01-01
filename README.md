@@ -36,9 +36,11 @@ Pyenv allows you to easily switch between multiple versions of Python, and Poetr
 me: so it should end up being pyenv -> pip install poetry -> poetry install and run
 
 ### pyenv commands
+```
 pyenv install 3.12.1
 pyenv virtualenv 3.12.1 linear-pyenv
 pyenv local linear-pyenv
+```
 
 This project includes a `.python-version` file, which Pyenv uses to automatically activate the correct environment when you enter the project directory:
 with a simple cd into this directory you should now be in the `linear-pyenv` environment.
@@ -59,7 +61,7 @@ Poetry is a tool for dependency management and packaging in Python. It allows yo
 
  Run the following command to install the dependencies specified in your `pyproject.toml` file:
    ```bash
-   poetry install --no-prod --no-test
+   poetry install
 ```
 
 ### Step 5: Running the Application
