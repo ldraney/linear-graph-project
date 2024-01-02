@@ -44,7 +44,7 @@ class StandaloneApplication(BaseApplication):
 
 if __name__ == "__main__":
     options = {
-        "bind": "%s:%s" % ("127.0.0.1", "8000"),
+        "bind": "%s:%s" % ("0.0.0.0", "8050"),
         "workers": number_of_workers(),  # Call the function to set the number of workers dynamically
     }
     # Replace 'app' with your actual Flask app instance
