@@ -4,6 +4,8 @@ import plotly.graph_objs as go
 
 app = Dash(__name__)
 
+server = app.server
+
 app.layout = html.Div(
     [
         html.H1("Policy Sales Visualization Tool"),
@@ -106,4 +108,4 @@ def update_graph(x_value, m_value, b1_value, b2_value):
 
 if __name__ == "__main__":
     app.run_server(debug=True)
-    # app.run(host='0.0.0.0', port='80')
+    # app.run(debug=True, host='0.0.0.0', port='8050')
