@@ -1,5 +1,5 @@
 # ... (other necessary imports) ...
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State
 import plotly.graph_objs as go
 
 app = Dash(__name__)
@@ -29,6 +29,7 @@ app.layout = html.Div(
                     step=1,
                     marks={i: str(i) for i in range(0, 851, 75)},
                 ),
+                dcc.Input(id="x-input", type="number", value=50, min=0, max=825),
             ]
         ),
         html.Div(
@@ -41,6 +42,9 @@ app.layout = html.Div(
                     value=0.5,
                     step=0.01,
                     marks={i / 10: str(i / 10) for i in range(0, 11)},
+                ),
+                dcc.Input(
+                    id="m-input", type="number", value=0.5, min=0, max=1, step=0.01
                 ),
             ]
         ),
@@ -55,6 +59,7 @@ app.layout = html.Div(
                     step=1,
                     marks={i: str(i) for i in range(0, 351, 35)},
                 ),
+                dcc.Input(id="b1-input", type="number", value=100, min=0, max=351),
             ]
         ),
         html.Div(
@@ -68,6 +73,7 @@ app.layout = html.Div(
                     step=1,
                     marks={i: str(i) for i in range(0, 351, 35)},
                 ),
+                dcc.Input(id="b2-input", type="number", value=100, min=0, max=351),
             ]
         ),
         dcc.Graph(id="policy-graph"),
@@ -77,7 +83,84 @@ app.layout = html.Div(
 )
 
 
-# Define callback to update graph
+# Callbacks to sync sliders and input boxes
+@app.callback(
+    Output("x-slider", "value"),
+    [Input("x-input", "value")],
+    [State("x-slider", "value")],
+)
+def update_x_slider(input_val, slider_val):
+    # When input box is used, update the slider
+    return input_val if input_val is not None else slider_val
+
+
+# Callback for 'Conversion Efficiency (M)' slider and input box
+@app.callback(
+    Output("m-slider", "value"),
+    [Input("m-input", "value")],
+    [State("m-slider", "value")],
+)
+def update_m_slider(input_val, slider_val):
+    return input_val if input_val is not None else slider_val
+
+
+# Callback for 'Previous Customer Households (B1)' slider and input box
+@app.callback(
+    Output("b1-slider", "value"),
+    [Input("b1-input", "value")],
+    [State("b1-slider", "value")],
+)
+def update_b1_slider(input_val, slider_val):
+    return input_val if input_val is not None else slider_val
+
+
+# Callback for 'Additional Coverage and Renewals (B2)' slider and input box
+@app.callback(
+    Output("b2-slider", "value"),
+    [Input("b2-input", "value")],
+    [State("b2-slider", "value")],
+)
+def update_b2_slider(input_val, slider_val):
+    return input_val if input_val is not None else slider_val
+
+
+# Callback to update the input box when the 'X' slider changes
+@app.callback(
+    Output("x-input", "value"),
+    [Input("x-slider", "value")],
+)
+def update_x_input(slider_val):
+    return slider_val
+
+
+# Callback to update the input box when the 'M' slider changes
+@app.callback(
+    Output("m-input", "value"),
+    [Input("m-slider", "value")],
+)
+def update_m_input(slider_val):
+    return slider_val
+
+
+# Callback to update the input box when the 'B1' slider changes
+@app.callback(
+    Output("b1-input", "value"),
+    [Input("b1-slider", "value")],
+)
+def update_b1_input(slider_val):
+    return slider_val
+
+
+# Callback to update the input box when the 'B2' slider changes
+@app.callback(
+    Output("b2-input", "value"),
+    [Input("b2-slider", "value")],
+)
+def update_b2_input(slider_val):
+    return slider_val
+
+
+# Callback to update graph based on slider or input values
 @app.callback(
     Output("policy-graph", "figure"),
     [
@@ -85,9 +168,22 @@ app.layout = html.Div(
         Input("m-slider", "value"),
         Input("b1-slider", "value"),
         Input("b2-slider", "value"),
+        # Add inputs as dependencies too
+        Input("x-input", "value"),
+        Input("m-input", "value"),
+        Input("b1-input", "value"),
+        Input("b2-input", "value"),
     ],
 )
-def update_graph(x_value, m_value, b1_value, b2_value):
+def update_graph(
+    x_value, m_value, b1_value, b2_value, x_input, m_input, b1_input, b2_input
+):
+    # Use the most recent values from either the slider or input box
+    x_value = x_input if x_input is not None else x_slider
+    m_value = m_input if m_input is not None else m_slider
+    b1_value = b1_input if b1_input is not None else b1_slider
+    b2_value = b2_input if b2_input is not None else b2_slider
+
     total_b = b1_value + b2_value  # Calculate total B as the sum of B1 and B2
     y_values = [m_value * x + total_b for x in range(x_value + 1)]
     figure = go.Figure(
