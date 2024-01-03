@@ -29,7 +29,9 @@ app.layout = html.Div(
                     step=1,
                     marks={i: str(i) for i in range(0, 851, 75)},
                 ),
-                dcc.Input(id="x-input", type="number", value=50, min=0, max=825),
+                dcc.Input(
+                    id="x-input", type="number", value=50, min=0, max=825, step=1
+                ),
             ]
         ),
         html.Div(
@@ -59,7 +61,9 @@ app.layout = html.Div(
                     step=1,
                     marks={i: str(i) for i in range(0, 351, 35)},
                 ),
-                dcc.Input(id="b1-input", type="number", value=100, min=0, max=351),
+                dcc.Input(
+                    id="b1-input", type="number", value=10, min=0, max=351, step=1
+                ),
             ]
         ),
         html.Div(
@@ -73,7 +77,9 @@ app.layout = html.Div(
                     step=1,
                     marks={i: str(i) for i in range(0, 351, 35)},
                 ),
-                dcc.Input(id="b2-input", type="number", value=100, min=0, max=351),
+                dcc.Input(
+                    id="b2-input", type="number", value=5, min=0, max=351, step=1
+                ),
             ]
         ),
         dcc.Graph(id="policy-graph"),
