@@ -57,10 +57,6 @@ ENV POETRY_NO_INTERACTION=1 \
 
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-root --without test --with prod
 
-# Install dependencies and build the project using Poetry
-#RUN poetry config virtualenvs.in-project true \
-    #&& poetry install --no-dev
-
 # Stage 2: Run environment with Distroless Python image
 # I chose this image because its hosted on gcr.io and is viewable on Github
 # Its the only distroless on gcr.io with python pre-installed
