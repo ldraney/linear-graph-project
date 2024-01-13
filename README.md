@@ -1,9 +1,8 @@
-production command:
+right now both dev and production use:
 ```
-poetry run gunicorn "app:server"
+docker compose -f ci/docker-compose.yml build
+docker compose -f ci/docker-compose.yml up
 ```
-
-
 
 
 # linear-graph-project
