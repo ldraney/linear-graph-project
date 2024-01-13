@@ -18,11 +18,32 @@ app.layout = html.Div(
         - **B2 (Additional Coverage and Renewals)**: Additional life policies sold to customers who already have at least one life policy.
     """
         ),
+        # Enhanced Div to display the Y value
         html.Div(
             [
-                html.P("Calculated Life Policies Sold (Y):"),
-                dcc.Input(id="y-output", type="text", value="", disabled=True),
-            ]
+                html.P(
+                    "Calculated Life Policies Sold (Y):",
+                    style={"font-weight": "bold", "color": "#333333"},
+                ),
+                dcc.Input(
+                    id="y-output",
+                    type="text",
+                    value="",
+                    disabled=True,
+                    style={
+                        "textAlign": "center",
+                        "color": "#FFFFFF",
+                        "font-weight": "bold",
+                        "background-color": "#007BFF",
+                        "border": "none",
+                        "padding": "10px 20px",
+                        "font-size": "20px",
+                        "border-radius": "5px",
+                        "margin": "10px 0",
+                    },
+                ),
+            ],
+            style={"textAlign": "center"},
         ),
         html.Div(
             [
