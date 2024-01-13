@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  lgp-app:
+    image: lgp:latest
+    deploy:
+      replicas: 3  # Example for scalability
+      update_config:
+        parallelism: 1 # This setting controls how many replicas can be updated simultaneously.
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "80:8050"  # Expose on a standard HTTP port for a Dash app
+    # environment:
+    # volumes:
+    networks:
+      - webnet
+networks:
+  webnet:
