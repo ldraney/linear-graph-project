@@ -8,7 +8,7 @@ server = app.server
 
 app.layout = html.Div(
     [
-        html.H1("Policy Sales Visualization Tool"),
+        html.H1("Policy Sales Visualization Tool 3"),
         dcc.Markdown(
             """
         **Adjust the sliders to see how outreach, conversion efficiency, and existing policies impact policy sales.**
@@ -17,6 +17,33 @@ app.layout = html.Div(
         - **B1 (Previous Customer Households)**: Life policies sold to previous customer households without current life policies.
         - **B2 (Additional Coverage and Renewals)**: Additional life policies sold to customers who already have at least one life policy.
     """
+        ),
+        # Enhanced Div to display the Y value
+        html.Div(
+            [
+                html.P(
+                    "Calculated Life Policies Sold (Y):",
+                    style={"font-weight": "bold", "color": "#333333"},
+                ),
+                dcc.Input(
+                    id="y-output",
+                    type="text",
+                    value="",
+                    disabled=True,
+                    style={
+                        "textAlign": "center",
+                        "color": "#FFFFFF",
+                        "font-weight": "bold",
+                        "background-color": "#007BFF",
+                        "border": "none",
+                        "padding": "10px 20px",
+                        "font-size": "20px",
+                        "border-radius": "5px",
+                        "margin": "10px 0",
+                    },
+                ),
+            ],
+            style={"textAlign": "center"},
         ),
         html.Div(
             [
@@ -166,32 +193,34 @@ def update_b2_input(slider_val):
     return slider_val
 
 
-# Callback to update graph based on slider or input values
 @app.callback(
-    Output("policy-graph", "figure"),
+    [Output("policy-graph", "figure"), Output("y-output", "value")],
     [
         Input("x-slider", "value"),
         Input("m-slider", "value"),
         Input("b1-slider", "value"),
         Input("b2-slider", "value"),
-        # Add inputs as dependencies too
         Input("x-input", "value"),
         Input("m-input", "value"),
         Input("b1-input", "value"),
         Input("b2-input", "value"),
     ],
 )
-def update_graph(
-    x_value, m_value, b1_value, b2_value, x_input, m_input, b1_input, b2_input
+def update_graph_and_y_value(
+    x_slider, m_slider, b1_slider, b2_slider, x_input, m_input, b1_input, b2_input
 ):
-    # Use the most recent values from either the slider or input box
+    # Determine the most recent values from either the slider or input box
     x_value = x_input if x_input is not None else x_slider
     m_value = m_input if m_input is not None else m_slider
     b1_value = b1_input if b1_input is not None else b1_slider
     b2_value = b2_input if b2_input is not None else b2_slider
 
-    total_b = b1_value + b2_value  # Calculate total B as the sum of B1 and B2
+    # Calculate the total B and Y values
+    total_b = b1_value + b2_value
     y_values = [m_value * x + total_b for x in range(x_value + 1)]
+    y_value = m_value * x_value + total_b
+
+    # Generate the figure
     figure = go.Figure(
         data=go.Scatter(
             x=list(range(x_value + 1)),
@@ -205,9 +234,9 @@ def update_graph(
         xaxis_title="New Households (X)",
         yaxis_title="Life Policies Sold (Y)",
     )
-    return figure
+    return figure, str(y_value)
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
-    # app.run(debug=True, host='0.0.0.0', port='8050')
+    #  app.run_server(debug=True)
+    app.run(debug=True, host="0.0.0.0", port="8050")
