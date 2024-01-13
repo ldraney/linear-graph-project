@@ -8,7 +8,7 @@ server = app.server
 
 app.layout = html.Div(
     [
-        html.H1("Policy Sales Visualization Tool"),
+        html.H1("Policy Sales Visualization Tool 3"),
         dcc.Markdown(
             """
         **Adjust the sliders to see how outreach, conversion efficiency, and existing policies impact policy sales.**
@@ -209,5 +209,5 @@ def update_graph(
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
-    # app.run(debug=True, host='0.0.0.0', port='8050')
+    #  app.run_server(debug=True)
+    app.run(debug=True, host="0.0.0.0", port="8050")

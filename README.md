@@ -1,8 +1,26 @@
+### Current workflow
+```
+docker compose -f ci/docker-compose-dev.yml down && \
+docker compose -f ci/docker-compose-dev.yml up
+```
+
+
+
+
+
+production command:
+```
+poetry run gunicorn "app:server"
+```
+
 right now both dev and production use:
 ```
 docker compose -f ci/docker-compose.yml build
 docker compose -f ci/docker-compose.yml up
 ```
+
+
+
 
 
 # linear-graph-project

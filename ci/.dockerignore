@@ -1,7 +1,7 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# __pycache__/
+# *.py[cod]
+# *$py.class
 
 # Caches and logs
 .cache
@@ -24,19 +24,19 @@ tests/
 .DS_Store  # MacOS file system file
 
 # Local development configurations
-.env
-.env.local
-.poetry-env
+# .env
+# .env.local
+# .poetry-env
 
 # Build artifacts
-dist/
-build/
-*.egg-info/
+# dist/
+# build/
+# *.egg-info/
 
 # Docker related
 docker-compose.yml
 docker-compose.override.yml
 
 # Poetry files
-poetry.lock
-pyproject.toml
+# poetry.lock
+# pyproject.toml
