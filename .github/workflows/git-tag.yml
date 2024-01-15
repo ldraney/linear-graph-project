@@ -1,0 +1,26 @@
+name: Git Tag Workflow
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Out Repo
+      # https://github.com/actions/checkout
+      uses: actions/checkout@v4
+
+    - name: Build and Push Docker Image
+      # https://github.com/docker/build-push-action
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: my-ecr-repo:${{ github.ref }}
+        build-args: VERSION=${{ github.ref }}
+
+    # Additional steps for deployment or notifications

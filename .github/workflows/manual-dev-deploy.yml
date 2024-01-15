@@ -1,0 +1,35 @@
+name: Manual Dev Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch Name'
+        required: true
+        default: 'main'
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Out Repo
+      # https://github.com/actions/checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branchName }}
+
+    - name: Build and Push Docker Image
+      # https://github.com/docker/build-push-action
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: my-ecr-repo:${{ github.event.inputs.branchName }}-${{ github.sha }}
+
+    # - name: Deploy to Docker Swarm
+      # run: |
+        # Add commands or a script to trigger Docker Swarm deployment
+        # Ensure Docker Swarm context and credentials are configured
+
+    # Additional steps as needed

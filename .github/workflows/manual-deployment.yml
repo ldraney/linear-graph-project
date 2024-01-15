@@ -1,0 +1,43 @@
+name: Manual Deployment Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch Name'
+        required: true
+      environment:
+        description: 'Target Environment (dev or prod)'
+        required: true
+        default: 'dev'
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Out Repo
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branchName }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: my-ecr-repo:${{ github.event.inputs.branchName }}-${{ github.sha }}
+
+    - name: Deploy to Docker Swarm
+      if: ${{ github.event.inputs.environment == 'dev' }}
+      run: |
+        # Add commands or a script to trigger Docker Swarm deployment in dev
+        # Ensure Docker Swarm context and credentials are configured for dev
+
+    - name: Deploy to Docker Swarm Production
+      if: ${{ github.event.inputs.environment == 'prod' }}
+      run: |
+        # Add commands or a script to trigger Docker Swarm deployment in prod
+        # Ensure Docker Swarm context and credentials are configured for prod
+
+    # Additional steps as needed
