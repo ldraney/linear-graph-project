@@ -5,5 +5,7 @@ services:
       context: ..
       dockerfile: ci/Dockerfile
     container_name: lgp-app
+    volumes:
+      - .:/linear-graph-project
     ports:
       - "8050:8050"  # Adjust if your app uses a different port
