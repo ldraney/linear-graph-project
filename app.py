@@ -8,7 +8,7 @@ server = app.server
 
 app.layout = html.Div(
     [
-        html.H1("Policy Sales Visualization Tool 3"),
+        html.H1("Policy Sales Visualization Tool"),
         dcc.Markdown(
             """
         **Adjust the sliders to see how outreach, conversion efficiency, and existing policies impact policy sales.**
