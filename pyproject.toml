@@ -21,7 +21,7 @@ optional = true
 pytest = "^7.4.0"
 pytest-check = "^2.2.0"
 flake8 = "^4.0.1"  # For linting
-black = "^22.3.0"  # For code formatting
+black = "^24.3.0"  # For code formatting
 mypy = "^0.971"    # For static type checking
 
 [tool.poetry.group.prod]
